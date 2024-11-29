@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface SlideElement {
   id: string;
@@ -15,12 +15,6 @@ interface SlideEditorProps {
 }
 
 const SlideEditor: React.FC<SlideEditorProps> = ({ elements, setElements }) => {
-  const moveElement = (id: string, x: number, y: number) => {
-    setElements((prevElements) =>
-      prevElements.map((elem) => (elem.id === id ? { ...elem, x, y } : elem))
-    );
-  };
-
   const changeElement = (id: string, key: string, value: any) => {
     setElements((prevElements) =>
       prevElements.map((elem) =>

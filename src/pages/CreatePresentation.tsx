@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
-interface Presentation {
-  id: string;
-  name: string;
-  creator_id: string;
-  created_at: string;
-  updated_at: string;
-}
+
 const CreatePresentation: React.FC = () => {
   const [presentationName, setPresentationName] = useState("");
   const [error, setError] = useState<string | null>(null);

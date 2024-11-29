@@ -64,7 +64,7 @@ const ChangeSlides = () => {
               alert("У вас нет прав на редактирование данного слайда.");
             }
           } else {
-            setAccessToPage((prev) => (prev = true));
+            setAccessToPage(true);
             setHasAccess(false);
           }
         }
@@ -132,7 +132,7 @@ const ChangeSlides = () => {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent, elementId: string) => {
+  const handleMouseDown = (elementId: string) => {
     if (!canEdit) return;
 
     setSelectedElementId(elementId);
@@ -285,7 +285,7 @@ const ChangeSlides = () => {
         {elements.map((element) => (
           <div
             key={element.id}
-            onMouseDown={(e) => handleMouseDown(e, element.id)}
+            onMouseDown={() => handleMouseDown(element.id)}
             style={{
               position: "absolute",
               left: `${element.x}px`,
