@@ -48,6 +48,7 @@ const ChangeSlides = () => {
           if (presentationData.creator_id === username) {
             setAccessToPage(false);
             setHasAccess(true);
+            setCanEdit(true);
           }
         }
         if (presentationData.access_type === "public") {
