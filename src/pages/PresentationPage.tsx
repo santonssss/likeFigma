@@ -29,7 +29,7 @@ const PresentationPage: React.FC = () => {
       {
         presentation_id: id,
         index: slides.length + 1,
-        content: JSON.stringify({ elements: [] }), // создаем пустой слайд
+        content: JSON.stringify({ elements: [] }),
         updated_at: new Date(),
       },
     ]);
@@ -54,7 +54,6 @@ const PresentationPage: React.FC = () => {
         </button>
       </div>
       <div className="row mb-4">
-        {/* Отображаем все слайды */}
         {slides.map((slide: any, index) => (
           <div key={slide.id} className="col-md-4 mb-4">
             <Link to={`/slides/${slide.id}`} className="text-decoration-none">

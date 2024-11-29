@@ -17,7 +17,7 @@ const WelcomPage: React.FC = () => {
   const handleSubmit = () => {
     if (username) {
       localStorage.setItem("username", username);
-      window.location.href = "/presentations";
+      window.location.href = "/AllPresentation";
     }
   };
 
