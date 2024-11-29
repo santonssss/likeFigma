@@ -143,14 +143,18 @@ const ChangeSlides = () => {
     }
   };
 
+  const [isDragging, setIsDragging] = useState(false);
+
   const handleMouseDown = (elementId: string) => {
     if (!canEdit) return;
 
+    console.log("Selected element ID:", elementId);
     setSelectedElementId(elementId);
+    setIsDragging(true);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!canEdit || !selectedElementId) return;
+    if (!canEdit || !isDragging || !selectedElementId) return;
 
     const newElements = [...elements];
     const index = newElements.findIndex((el) => el.id === selectedElementId);
@@ -174,7 +178,9 @@ const ChangeSlides = () => {
   };
 
   const handleMouseUp = () => {
-    setSelectedElementId(null);
+    if (isDragging) {
+      setIsDragging(false);
+    }
   };
 
   const handleChangeColor = (color: string) => {
@@ -256,31 +262,31 @@ const ChangeSlides = () => {
           Добавить треугольник
         </button>
       </div>
-      {selectedElement && (
-        <div className="mb-4">
-          <h4>Настройки элемента</h4>
-          <div className="form-group">
-            <label>Цвет</label>
-            <input
-              type="color"
-              className="form-control"
-              value={selectedElement.color}
-              onChange={(e) => handleChangeColor(e.target.value)}
-              disabled={!canEdit}
-            />
-          </div>
-          <div className="form-group">
-            <label>Размер</label>
-            <input
-              type="number"
-              className="form-control"
-              value={selectedElement.size}
-              onChange={(e) => handleChangeSize(Number(e.target.value))}
-              disabled={!canEdit}
-            />
-          </div>
+      <div className="mb-4">
+        <h4>Настройки элемента</h4>
+        <div className="form-group">
+          <label>Цвет</label>
+          <input
+            type="color"
+            className="form-control"
+            value={selectedElement?.color || "#000000"}
+            onChange={(e) => handleChangeColor(e.target.value)}
+            disabled={!canEdit || !selectedElement}
+          />
         </div>
-      )}
+        <div className="form-group">
+          <label>Размер</label>
+          <input
+            type="number"
+            className="form-control"
+            value={selectedElement?.size || 10}
+            onChange={(e) =>
+              selectedElement ? handleChangeSize(Number(e.target.value)) : null
+            }
+            disabled={!canEdit || !selectedElement}
+          />
+        </div>
+      </div>
       <div
         className="work-area"
         style={{
