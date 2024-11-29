@@ -12,7 +12,7 @@ const ChangeSlides = () => {
   );
   const [hasAccess, setHasAccess] = useState(false);
   const [canEdit, setCanEdit] = useState(false);
-  const [accessToPage, setAccessToPage] = useState<boolean>();
+  const [accessToPage, setAccessToPage] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,11 +44,18 @@ const ChangeSlides = () => {
       const username = localStorage.getItem("username");
 
       if (username) {
+        if (presentationData.access_type === "private") {
+          if (presentationData.creator_id === username) {
+            setAccessToPage(false);
+            setHasAccess(true);
+          }
+        }
         if (presentationData.access_type === "public") {
           if (presentationData.creator_id === username) {
             setHasAccess(true);
             setCanEdit(true);
           } else {
+            setCanEdit(true);
             setHasAccess(false);
           }
         } else if (presentationData.access_type === "private") {
@@ -57,6 +64,7 @@ const ChangeSlides = () => {
           );
 
           if (userInAllowed) {
+            setAccessToPage(false);
             if (userInAllowed.canEdit) {
               setCanEdit(true);
             } else {
@@ -64,8 +72,10 @@ const ChangeSlides = () => {
               alert("У вас нет прав на редактирование данного слайда.");
             }
           } else {
-            setAccessToPage(true);
-            setHasAccess(false);
+            if (!userInAllowed && presentationData.creator_id !== username) {
+              setAccessToPage(true);
+              setHasAccess(false);
+            }
           }
         }
       }
