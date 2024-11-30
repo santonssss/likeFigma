@@ -124,6 +124,7 @@ const ChangeSlides = () => {
       color: "black",
       size: 30,
       content: type === "TEXT" ? "Новый текст" : "",
+      rotation: 0,
     };
     setElements((prev) => [...prev, newElement]);
   };
@@ -142,13 +143,25 @@ const ChangeSlides = () => {
       navigate(`/presentation/${slide?.presentation_id}`);
     }
   };
+  const rotateElement = (angle: number) => {
+    if (!canEdit || !selectedElementId) return;
 
+    const newElements = [...elements];
+    const index = newElements.findIndex((el) => el.id === selectedElementId);
+
+    if (index !== -1) {
+      newElements[index] = {
+        ...newElements[index],
+        rotation: (newElements[index].rotation + angle) % 360,
+      };
+      setElements(newElements);
+    }
+  };
   const [isDragging, setIsDragging] = useState(false);
 
   const handleMouseDown = (elementId: string) => {
     if (!canEdit) return;
 
-    console.log("Selected element ID:", elementId);
     setSelectedElementId(elementId);
     setIsDragging(true);
   };
@@ -193,6 +206,12 @@ const ChangeSlides = () => {
       newElements[index] = { ...newElements[index], color };
       setElements(newElements);
     }
+  };
+  const deleteElement = () => {
+    if (!canEdit || !selectedElementId) return;
+
+    setElements((prev) => prev.filter((el) => el.id !== selectedElementId));
+    setSelectedElementId(null);
   };
 
   const handleChangeSize = (size: number) => {
@@ -261,6 +280,13 @@ const ChangeSlides = () => {
         >
           Добавить треугольник
         </button>
+        <button
+          className="btn btn-danger mt-2"
+          onClick={deleteElement}
+          disabled={!canEdit || !selectedElementId}
+        >
+          Удалить элемент
+        </button>
       </div>
       <div className="mb-4">
         <h4>Настройки элемента</h4>
@@ -284,6 +310,31 @@ const ChangeSlides = () => {
               selectedElement ? handleChangeSize(Number(e.target.value)) : null
             }
             disabled={!canEdit || !selectedElement}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label d-flex justify-content-between">
+            <span>Поворот</span>
+            <span className="text-muted">
+              {selectedElement?.rotation || 0}°
+            </span>
+          </label>
+          <input
+            type="range"
+            className="form-range"
+            min="0"
+            max="360"
+            step="1"
+            value={selectedElement?.rotation || 0}
+            onChange={(e) =>
+              selectedElement
+                ? rotateElement(
+                    parseInt(e.target.value, 10) -
+                      (selectedElement.rotation || 0)
+                  )
+                : null
+            }
+            disabled={!canEdit || !selectedElementId}
           />
         </div>
       </div>
@@ -310,6 +361,7 @@ const ChangeSlides = () => {
               cursor: canEdit ? "move" : "not-allowed",
               border:
                 selectedElementId === element.id ? "2px solid blue" : "none",
+              transform: `rotate(${element.rotation}deg)`,
             }}
           >
             {element.type === "TEXT" && (
