@@ -26,7 +26,25 @@ const PresentationPage: React.FC = () => {
 
     fetchSlides();
   }, [id]);
-
+  const handleCreateSlide = async () => {
+    const { data, error } = await supabase.from("slides").insert([
+      {
+        presentation_id: id,
+        index: slides.length + 1,
+        content: JSON.stringify({ elements: [] }),
+        updated_at: new Date(),
+      },
+    ]);
+    if (error) {
+      console.error(error);
+    } else {
+      if (data && Array(data).length > 0) {
+        setSlides((prev) => [...prev, data[0]]);
+      } else {
+        console.error("Не удалось создать слайд");
+      }
+    }
+  };
   const handleExportToPDF = async () => {
     const pdf = new jsPDF({
       orientation: "landscape",
@@ -100,6 +118,9 @@ const PresentationPage: React.FC = () => {
   return (
     <div className="container">
       <h2 className="text-center mb-4">Презентация</h2>
+      <button onClick={handleCreateSlide} className="btn btn-success mb-5">
+        Создать новый слайд
+      </button>
       <div className="form-group mb-4 d-flex justify-content-between">
         <button className="btn btn-primary" onClick={handleExportToPDF}>
           Экспортировать все слайды в PDF
