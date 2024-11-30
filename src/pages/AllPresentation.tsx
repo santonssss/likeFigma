@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import { Link } from "react-router-dom";
 
 const PresentationsPage = () => {
   const [presentations, setPresentations] = useState<any[]>([]);
@@ -32,6 +33,9 @@ const PresentationsPage = () => {
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Все презентации</h1>
+      <Link to="/createPresentation" className="btn mb-5 btn-primary">
+        Создать новую презентацию
+      </Link>
       {presentations.length === 0 ? (
         <p>Презентаций пока нет.</p>
       ) : (
